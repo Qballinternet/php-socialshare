@@ -23,7 +23,7 @@ class Facebook implements ProviderInterface
     const API_URL = 'https://graph.facebook.com/?id=%s';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getName()
     {
@@ -31,7 +31,7 @@ class Facebook implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getLink($url, array $options = array())
     {
@@ -39,19 +39,24 @@ class Facebook implements ProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getShares($url)
     {
         $data = json_decode(file_get_contents(sprintf(self::API_URL, urlencode($url))));
 
+        $count = 0;
+
         if (isset($data->likes)) {
-            return intval($data->likes);
+            $count += intval($data->likes);
         }
         if (isset($data->shares)) {
-            return intval($data->shares);
+            $count += intval($data->shares);
+        }
+        if (isset($data->comments)) {
+            $count += intval($data->comments);
         }
 
-        return 0;
+        return $count;
     }
 }
